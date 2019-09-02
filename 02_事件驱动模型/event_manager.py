@@ -1,8 +1,8 @@
-# 系统模块
-from queue import Queue, Empty
-from threading import *
+#-*- coding=utf-8 -*-
+from Queue import Queue, Empty
+from threading import Timer, Thread
 
-########################################################################
+# 事件管理器
 class EventManager:
     #----------------------------------------------------------------------
     def __init__(self):
@@ -33,10 +33,10 @@ class EventManager:
     def __EventProcess(self, event):
         """处理事件"""
         # 检查是否存在对该事件进行监听的处理函数
-        if event.type_ in self.__handlers:
+        if event in self.__handlers:
             # 若存在，则按顺序将事件传递给处理函数执行
-            for handler in self.__handlers[event.type_]:
-                handler(event)
+            for handler in self.__handlers[event]:
+                handler()
 
     #----------------------------------------------------------------------
     def Start(self):
@@ -55,32 +55,25 @@ class EventManager:
         self.__thread.join()
 
     #----------------------------------------------------------------------
-    def AddEventListener(self, type_, handler):
+    def AddEventListener(self, Listener):
         """绑定事件和监听器处理函数"""
         # 尝试获取该事件类型对应的处理函数列表，若无则创建
         try:
-            handlerList = self.__handlers[type_]
+            handlerList = self.__handlers[Listener.event_name]
         except KeyError:
             handlerList = []
             
-        self.__handlers[type_] = handlerList
+        self.__handlers[Listener.event_name] = handlerList
         # 若要注册的处理器不在该事件的处理器列表中，则注册该事件
-        if handler not in handlerList:
-            handlerList.append(handler)
+        if Listener.processor not in handlerList:
+            self.__handlers[Listener.event_name].append(Listener.processor)
             
     #----------------------------------------------------------------------
     def RemoveEventListener(self, type_, handler):
         """移除监听器的处理函数"""
-        #读者自己试着实现
+        pass
         
     #----------------------------------------------------------------------
     def SendEvent(self, event):
         """发送事件，向事件队列中存入事件"""
         self.__eventQueue.put(event)
-
-########################################################################
-"""事件对象"""
-class Event:
-    def __init__(self, type_=None):
-        self.type_ = type_      # 事件类型
-        self.dict = {}          # 字典用于保存具体的事件数据

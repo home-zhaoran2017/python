@@ -43,6 +43,7 @@ def test():
     eventManager.Start()
 
     publicAcc = PublicAccounts(eventManager)
+
     timer = Timer(2, publicAcc.WriteNewArtical)
     timer.start()
     
