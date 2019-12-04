@@ -1,29 +1,39 @@
-from multiprocessing import Pipe, Process
+import time
+from multiprocessing import Process, Pipe
 
-def son_process(pipe):
-    _out_pipe, _in_pipe = pipe
+class test():
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
 
-    # 关闭fork过来的输入端
-    _in_pipe.close()
+def send1(conn):
+    n=0
+    c = test("zhaoran",29)
     while True:
-        try:
-            msg = _out_pipe.recv()
-            print(msg)
-        except EOFError:
-            # 当out_pipe接受不到输出的时候且输入被关闭的时候，会抛出EORFError，可以捕获并且退出子进程
-            break
+        n+=1
+#       conn.send("send1: %d"%n)
+        conn.send(c)
+        time.sleep(0.1)
+    conn.close()
 
+def send2(conn):
+    n=0
+    while True:
+        n+=1
+        conn.send("send2: %d"%n)
+        time.sleep(1.0)
+    conn.close()
 
-if __name__ == '__main__':
-    out_pipe, in_pipe = Pipe(True)
-    son_p = Process(target=son_process, args=((out_pipe, in_pipe)))
-    son_p.start()
+father_conn,son_conn=Pipe()
+#p=[Process(target=send1,args=(son_conn,)),Process(target=send2,args=(son_conn,))]
+p=[Process(target=send1,args=(son_conn,))]
 
-    # 等pipe被fork 后，关闭主进程的输出端
-    # 这样，创建的Pipe一端连接着主进程的输入，一端连接着子进程的输出口
-    out_pipe.close()
-    for x in range(1000):
-        in_pipe.send(x)
-    in_pipe.close()
-    son_p.join()
-    print("主进程也结束了")
+p[0].start()
+#p[1].start()
+
+while True:
+    print(father_conn.recv().age)
+    time.sleep(2)
+
+p[0].join()
+#p[1].join()

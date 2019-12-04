@@ -1,0 +1,5 @@
+stu_no|name|register|id_card|is_card|is_orphan|is_martyr_child|is_special_care|is_low_income|is_most_needy|is_disability_stu|disability_num|unemployment_num|family_income|student_num|older_num|single_family|serious_disaster|natural_disasters|sudden_accident|house
+S201907001|王二|0|001|0|1|0|1|0|0|1|1|1|6000|2|1|0|0|1|0|1
+S201907002|张三|0|002|1|0|1|0|1|1|0|0|2|5000|1|2|1|1|0|1|2
+S201907003|李四|1|003|0|0|0|0|0|0|0|3|3|6000|0|0|0|1|1|1|0
+S201907004|赵五|0|004|0|0|0|0|0|0|0|0|0|7000|2|2|0|0|1|1|1

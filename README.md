@@ -1,2 +1,2 @@
 # python
-python程序案例代码。
+Python实现的一些小工具
